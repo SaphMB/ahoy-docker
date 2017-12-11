@@ -1,5 +1,7 @@
 FROM phusion/passenger-ruby24:0.9.27
 
+MAINTAINER Sapphire Mason-Brown <saphmb@gmail.com>
+
 # Set correct environment variables.
 ENV HOME /root
 
@@ -23,3 +25,10 @@ WORKDIR /tmp
 COPY app/Gemfile /tmp/
 COPY app/Gemfile.lock /tmp/
 RUN bundle install
+
+# Add our app
+COPY app /home/app/webapp
+RUN chown -R app:app /home/app
+
+# Clean up when done.
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
