@@ -1,34 +1,27 @@
-FROM phusion/passenger-ruby24:0.9.27
+FROM ruby:2.4.4-alpine
 
-MAINTAINER Sapphire Mason-Brown <saphmb@gmail.com>
+RUN mkdir app
 
-# Set correct environment variables.
-ENV HOME /root
+ADD app/Gemfile /app/
 
-# Use baseimage-docker's init process.
-CMD ["/sbin/my_init"]
+RUN apk --update add --virtual build-dependencies ruby-dev build-base \
+  && gem install bundler --no-ri --no-rdoc \
+  && cd /app \
+  && bundle install \
+  && apk del build-dependencies
+  
+ADD app/ahoy.rb /app
 
-# Enable nginx and Passenger
-RUN rm -f /etc/service/nginx/down
+ADD app/config.ru /app
 
-# Remove the default site
-RUN rm /etc/nginx/sites-enabled/default
+RUN chown -R nobody:nogroup /app
 
-# Create virtual host
-ADD docker/vhost.conf /etc/nginx/sites-enabled/app.conf
+USER nobody
 
-# Prepare folders
-RUN mkdir /home/app/webapp
+EXPOSE 9292
 
-# Run Bundle in a cache efficient way
-WORKDIR /tmp
-COPY app/Gemfile /tmp/
-COPY app/Gemfile.lock /tmp/
-RUN bundle install
+ENV HOME=/app
 
-# Add our app
-COPY app /home/app/webapp
-RUN chown -R app:app /home/app
+WORKDIR /app
 
-# Clean up when done.
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+CMD bundle exec rackup -o 0.0.0.0 -p 9292
