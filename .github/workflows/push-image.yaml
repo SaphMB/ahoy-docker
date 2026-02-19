@@ -31,4 +31,4 @@ jobs:
       - name: Build and push
         run: |
           docker buildx create --name rubuilder
-          docker buildx build --builder rubuilder --platform linux/arm64,linux/amd64 --push --tag ghcr.io/saphmb/hey-docker:${VERSION} .
+          docker buildx build --builder rubuilder --platform linux/arm64,linux/amd64 --push --tag ghcr.io/saphmb/hola-docker:${VERSION} .
