@@ -1,7 +1,8 @@
 source "https://rubygems.org"
 
-ruby '2.4.4'
+ruby '3.3.6'
 
 gem 'rack-test'
 gem 'rspec'
 gem 'sinatra'
+gem 'rack'

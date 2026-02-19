@@ -1,11 +1,13 @@
-FROM ruby:2.4.4-alpine
+FROM ruby:3.3.6-alpine
+
+LABEL org.opencontainers.image.source=https://github.com/SaphMB/ahoy-docker
 
 RUN mkdir app
 
 ADD app/Gemfile /app/
 
 RUN apk --update add --virtual build-dependencies ruby-dev build-base \
-  && gem install bundler --no-ri --no-rdoc \
+  && gem install bundler \
   && cd /app \
   && bundle install \
   && apk del build-dependencies
