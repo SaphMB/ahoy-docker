@@ -1,6 +1,6 @@
 FROM ruby:3.3.6-alpine
 
-LABEL org.opencontainers.image.source=https://github.com/SaphMB/ahoy-docker
+# LABEL org.opencontainers.image.source=https://github.com/SaphMB/ahoy-docker
 
 RUN mkdir app
 
